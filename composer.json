@@ -1,0 +1,29 @@
+{
+    "name": "biigle/gpu",
+    "description": "Handle communication between BIIGLE and the BIIGLE GPU server.",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Martin Zurowietz",
+            "email": "martin@cebitec.uni-bielefeld.de"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Biigle\\Modules\\Gpu\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Biigle\\Modules\\Gpu\\GpuServiceProvider"
+            ],
+            "aliases": {
+                "Gpu": "Biigle\\Modules\\Gpu\\Facades\\Gpu"
+            }
+        }
+    }
+}
