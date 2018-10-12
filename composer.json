@@ -1,6 +1,6 @@
 {
-    "name": "biigle/gpu",
-    "description": "Handle communication between BIIGLE and the BIIGLE GPU server.",
+    "name": "biigle/laravel-remote-queue",
+    "description": "Submit jobs to another Laravel or Lumen instance.",
     "type": "library",
     "authors": [
         {
@@ -9,21 +9,33 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "~6.0"
+        "guzzlehttp/guzzle": "~6.0",
+        "illuminate/queue": "^5.5",
+        "illuminate/support": "^5.5",
+        "illuminate/contracts": "^5.5"
     },
     "autoload": {
         "psr-4": {
-            "Biigle\\Modules\\Gpu\\": "src"
+            "Biigle\\RemoteQueue\\": "src"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Biigle\\RemoteQueue\\Tests\\": "tests/"
+        },
+        "classmap": [
+            "tests/TestCase.php"
+        ]
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Biigle\\Modules\\Gpu\\GpuServiceProvider"
-            ],
-            "aliases": {
-                "Gpu": "Biigle\\Modules\\Gpu\\Facades\\Gpu"
-            }
+                "Biigle\\RemoteQueue\\RemoteQueueServiceProvider"
+            ]
         }
+    },
+    "require-dev": {
+        "laravel/laravel": "^5.5",
+        "phpunit/phpunit": "^7.4"
     }
 }

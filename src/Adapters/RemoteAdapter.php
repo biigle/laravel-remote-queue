@@ -2,7 +2,7 @@
 
 namespace Biigle\Modules\Gpu\Adapters;
 
-use Biigle\Jobs\Job;
+use Biigle\Modules\Gpu\GpuResponse;
 use Biigle\Modules\Gpu\Jobs\GpuJob;
 use Biigle\Modules\Gpu\Contracts\Adapter;
 
@@ -27,7 +27,7 @@ class RemoteAdapter implements Adapter
     /**
      * {@inheritdoc}
      */
-    public function pushResponse(Job $response)
+    public function pushResponse(GpuResponse $response)
     {
         //
     }
