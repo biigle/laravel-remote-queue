@@ -2,6 +2,7 @@
 
 namespace Biigle\RemoteQueue;
 
+use GuzzleHttp\Client;
 use Illuminate\Queue\Connectors\ConnectorInterface;
 
 class RemoteConnector implements ConnectorInterface
@@ -14,6 +15,11 @@ class RemoteConnector implements ConnectorInterface
      */
     public function connect(array $config)
     {
-        return new RemoteQueue;
+        $client = new Client([
+            'base_uri' => $config['url'],
+            'auth' => [$config['username'], $config['password']],
+        ]);
+
+        return new RemoteQueue($client, $config['queue']);
     }
 }

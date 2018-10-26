@@ -2,12 +2,39 @@
 
 namespace Biigle\RemoteQueue;
 
+use GuzzleHttp\Client;
 use Illuminate\Queue\Queue;
 use Illuminate\Queue\Connectors\ConnectorInterface;
 use Illuminate\Contracts\Queue\Queue as QueueContract;
 
 class RemoteQueue extends Queue implements QueueContract
 {
+    /**
+     * Guzzle client for the configured remote entpoint
+     *
+     * @var Client
+     */
+    protected $client;
+
+    /**
+     * Default queue to push jobs on the remote end
+     *
+     * @var string
+     */
+    protected $default;
+
+    /**
+     * Create a new remote queue instance.
+     *
+     * @param Client $client Guzzle client for the configured remote entpoint
+     * @param string $default Default queue to push jobs on the remote end
+     */
+    public function __construct(Client $client, $default = 'default')
+    {
+        $this->client = $client;
+        $this->default = $default;
+    }
+
     /**
      * Get the size of the queue.
      *
@@ -16,7 +43,10 @@ class RemoteQueue extends Queue implements QueueContract
      */
     public function size($queue = null)
     {
-        return 0;
+        $queue = $this->getQueue($queue);
+        $response = $this->client->get("queue/{$queue}/size");
+
+        return (int) $response->getBody()->getContents();
     }
 
     /**
@@ -29,7 +59,7 @@ class RemoteQueue extends Queue implements QueueContract
      */
     public function push($job, $data = '', $queue = null)
     {
-        //
+        return $this->pushRaw($this->createPayload($job, $data), $queue);
     }
 
     /**
@@ -42,7 +72,9 @@ class RemoteQueue extends Queue implements QueueContract
      */
     public function pushRaw($payload, $queue = null, array $options = [])
     {
-        //
+        $queue = $this->getQueue($queue);
+
+        return $this->client->post("queue/{$queue}", ['body' => $payload]);
     }
 
     /**
@@ -56,7 +88,8 @@ class RemoteQueue extends Queue implements QueueContract
      */
     public function later($delay, $job, $data = '', $queue = null)
     {
-        //
+        // A delay is unsupported for now.
+        $this->pushRaw($this->createPayload($job, $data), $queue);
     }
 
     /**
@@ -68,5 +101,16 @@ class RemoteQueue extends Queue implements QueueContract
     public function pop($queue = null)
     {
         //
+    }
+
+    /**
+     * Get the queue or return the default.
+     *
+     * @param  string|null  $queue
+     * @return string
+     */
+    protected function getQueue($queue)
+    {
+        return $queue ?: $this->default;
     }
 }

@@ -23,6 +23,22 @@ todo
 
 ## Usage
 
+To use the remote queue, configure a queue connection in the `queue.connections` config to use the `remote` driver:
+
+```php
+[
+   'driver' => 'remote',
+   // Default queue of the remote host to push jobs to.
+   'queue' => 'default',
+   // The remote queue API endpoint of the remote host.
+   'url' => 'http://192.168.100.100/api/v1/remote-queue',
+   // Basic auth username to use for authentication on the remote host.
+   'username' => '',
+   // Basic auth password to use for authentication on the remote host.
+   'password' => '',
+]
+```
+
 ```php
 use App\Jobs\MyJob;
 
