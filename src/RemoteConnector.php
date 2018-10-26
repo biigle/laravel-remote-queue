@@ -17,7 +17,7 @@ class RemoteConnector implements ConnectorInterface
     {
         $client = new Client([
             'base_uri' => $config['url'],
-            'auth' => [$config['username'], $config['password']],
+            'headers' => ['Authorization' => "Bearer {$config['token']}"]
         ]);
 
         return new RemoteQueue($client, $config['queue']);

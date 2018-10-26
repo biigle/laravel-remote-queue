@@ -12,7 +12,8 @@
         "guzzlehttp/guzzle": "~6.0",
         "illuminate/queue": "^5.5",
         "illuminate/support": "^5.5",
-        "illuminate/contracts": "^5.5"
+        "illuminate/contracts": "^5.5",
+        "illuminate/routing": "^5.5"
     },
     "autoload": {
         "psr-4": {
@@ -36,6 +37,7 @@
     },
     "require-dev": {
         "laravel/laravel": "^5.5",
-        "phpunit/phpunit": "^7.4"
+        "phpunit/phpunit": "^7.4",
+        "mockery/mockery": "^1.2"
     }
 }

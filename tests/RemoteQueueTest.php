@@ -7,7 +7,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Illuminate\Bus\Queueable;
 use GuzzleHttp\Handler\MockHandler;
 use Biigle\RemoteQueue\RemoteQueue;
 
@@ -20,8 +19,7 @@ class RemoteQueueTest extends TestCase
          'driver' => 'remote',
          'queue' => 'default',
          'url' => 'http://localhost/api/remote-queue',
-         'username' => 'test',
-         'password' => 'test',
+         'token' => 'test',
       ]]);
    }
 
@@ -42,7 +40,7 @@ class RemoteQueueTest extends TestCase
 
       $size = $queue->size();
       $this->assertEquals(123, $size);
-      $this->assertEquals('queue/default/size', $container[0]['request']->getUri());
+      $this->assertEquals('default/size', $container[0]['request']->getUri());
    }
 
    public function testSizeQueue()
@@ -56,7 +54,7 @@ class RemoteQueueTest extends TestCase
 
       $size = $queue->size('gpu');
       $this->assertEquals(123, $size);
-      $this->assertEquals('queue/gpu/size', $container[0]['request']->getUri());
+      $this->assertEquals('gpu/size', $container[0]['request']->getUri());
    }
 
    public function testPush()
@@ -71,7 +69,7 @@ class RemoteQueueTest extends TestCase
       $queue->push(new TestJob);
       $request = $container[0]['request'];
       $this->assertEquals('POST', $request->getMethod());
-      $this->assertEquals('queue/default', $request->getUri());
+      $this->assertEquals('default', $request->getUri());
       $this->assertContains('"commandName":"Biigle\\\RemoteQueue\\\Tests\\\TestJob"', $request->getBody()->getContents());
    }
 
@@ -85,11 +83,10 @@ class RemoteQueueTest extends TestCase
       $queue = new RemoteQueue($client);
 
       $queue->push(new TestJob, '', 'gpu');
-      $this->assertEquals('queue/gpu', $container[0]['request']->getUri());
+      $this->assertEquals('gpu', $container[0]['request']->getUri());
    }
 }
 
 class TestJob
 {
-   use Queueable;
 }

@@ -44,7 +44,7 @@ class RemoteQueue extends Queue implements QueueContract
     public function size($queue = null)
     {
         $queue = $this->getQueue($queue);
-        $response = $this->client->get("queue/{$queue}/size");
+        $response = $this->client->get("{$queue}/size");
 
         return (int) $response->getBody()->getContents();
     }
@@ -74,7 +74,7 @@ class RemoteQueue extends Queue implements QueueContract
     {
         $queue = $this->getQueue($queue);
 
-        return $this->client->post("queue/{$queue}", ['body' => $payload]);
+        return $this->client->post("{$queue}", ['body' => $payload]);
     }
 
     /**
