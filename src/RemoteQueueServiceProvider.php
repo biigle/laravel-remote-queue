@@ -2,7 +2,6 @@
 
 namespace Biigle\RemoteQueue;
 
-use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Biigle\RemoteQueue\Http\Middleware\Authenticate;
 
@@ -13,14 +12,14 @@ class RemoteQueueServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
         $this->app['queue']->addConnector('remote', function() {
             return new RemoteConnector;
         });
 
         if (config('remote-queue.listen')) {
-            $router->group([
+            $this->app['router']->group([
                 'prefix' => config('remote-queue.endpoint'),
                 'namespace' => 'Biigle\RemoteQueue\Http\Controllers',
                 'middleware' => Authenticate::class,
