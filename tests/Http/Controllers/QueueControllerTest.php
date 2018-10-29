@@ -20,12 +20,24 @@ class QueueControllerTest extends TestCase
 
     public function testStore()
     {
-        $payload = '{"commandName":"FakeTestJob"}';
+        $payload = json_encode(['data' => ['commandName' => TestJob::class]]);
+        $payload2 = json_encode(['data' => ['commandName' => 'DoesNotExist']]);
         $mock = Mockery::mock();
         $mock->shouldReceive('pushRaw')->once()->with($payload, 'default');
         Queue::shouldReceive('connection')->once()->andReturn($mock);
         $this->withoutMiddleware()
             ->post('api/v1/remote-queue/default')
+            // Payload is required
+            ->assertStatus(422);
+
+        $this->withoutMiddleware()
+            ->call('POST', 'api/v1/remote-queue/default', [], [], [], [], '.,')
+            // Payload is no valid JSON
+            ->assertStatus(422);
+
+        $this->withoutMiddleware()
+            ->call('POST', 'api/v1/remote-queue/default', [], [], [], [], $payload2)
+            // Job class does not exist
             ->assertStatus(422);
 
         $this->withoutMiddleware()

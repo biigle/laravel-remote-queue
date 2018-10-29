@@ -34,6 +34,16 @@ class QueueController extends Controller
             return new Response('Job payload is required', 422);
         }
 
+        $json = json_decode($payload, true);
+
+        if (is_null($json)) {
+            return new Response('Job payload is no valid JSON', 422);
+        }
+
+        if (!class_exists(array_get($json, 'data.commandName'))) {
+            return new Response('Job payload is no valid JSON', 422);
+        }
+
         app('queue')->connection(config('remote-queue.connection'))
             ->pushRaw($payload, $queue);
 
