@@ -68,8 +68,8 @@ Jobs pushed to the remote queue are transmitted via HTTP and processed on anothe
    'driver' => 'remote',
    // Default queue of the remote host to push jobs to.
    'queue' => 'default',
-   // The remote queue API endpoint of the remote host.
-   'url' => 'http://192.168.100.100/api/v1/remote-queue',
+   // The remote queue API endpoint of the remote host. Don't forget the trailing slash!
+   'url' => 'http://192.168.100.100/api/v1/remote-queue/',
    // Token to use for authentication on the remote host.
    'token' => 'IoO2l7UKZfso5zQloF2XvAShEbAR5a9M8u+WBfg0HgI=',
 ]
