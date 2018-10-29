@@ -5,7 +5,7 @@ Submit jobs to and receive jobs from other Laravel or Lumen instances.
 ## Installation
 
 ```
-composer config repositories.laravel-remote-queue vcs https://github.com/biigle/larave-remote-queue
+composer config repositories.laravel-remote-queue vcs https://github.com/biigle/laravel-remote-queue
 composer require biigle/laravel-remote-queue
 ```
 
