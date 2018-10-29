@@ -5,31 +5,28 @@ namespace Biigle\RemoteQueue\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Illuminate\Queue\QueueManager;
 
 class QueueController extends Controller
 {
     /**
      * Get the size of a queue
      *
-     * @param QueueManager $manager
      * @param string $queue
      *
      * @return int
      */
-    public function show(QueueManager $manager, $queue)
+    public function show($queue)
     {
-        return $manager->connection()->size($queue);
+        return app('queue')->connection()->size($queue);
     }
 
     /**
      * Accept a new job and push it to the local queue.
      *
      * @param Request $request
-     * @param QueueManager $manager
      * @param string $queue
      */
-    public function store(Request $request, QueueManager $manager, $queue)
+    public function store(Request $request, $queue)
     {
         $payload = $request->getContent();
 
@@ -37,7 +34,7 @@ class QueueController extends Controller
             return new Response('Job payload is required', 422);
         }
 
-        $manager->connection(config('remote-queue.connection'))
+        app('queue')->connection(config('remote-queue.connection'))
             ->pushRaw($payload, $queue);
 
     }
