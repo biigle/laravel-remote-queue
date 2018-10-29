@@ -4,6 +4,7 @@ namespace Biigle\RemoteQueue;
 
 use GuzzleHttp\Client;
 use Illuminate\Queue\Queue;
+use Illuminate\Support\Str;
 use Illuminate\Queue\Connectors\ConnectorInterface;
 use Illuminate\Contracts\Queue\Queue as QueueContract;
 
@@ -112,5 +113,31 @@ class RemoteQueue extends Queue implements QueueContract
     protected function getQueue($queue)
     {
         return $queue ?: $this->default;
+    }
+
+    /**
+     * Create a payload string from the given job and data.
+     *
+     * @param  string  $job
+     * @param  string   $queue
+     * @param  mixed   $data
+     * @return string
+     */
+    protected function createPayloadArray($job, $queue, $data = '')
+    {
+        return array_merge(parent::createPayloadArray($job, $queue, $data), [
+            'id' => $this->getRandomId(),
+            'attempts' => 0,
+        ]);
+    }
+
+    /**
+     * Get a random ID string.
+     *
+     * @return string
+     */
+    protected function getRandomId()
+    {
+        return Str::random(32);
     }
 }
