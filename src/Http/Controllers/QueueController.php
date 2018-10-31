@@ -27,10 +27,10 @@ class QueueController extends Controller
      */
     public function store(Request $request, $queue)
     {
-        $request->validate([
+        app('validator')->make($request->all(), [
             'job' => 'required',
             'data' => 'filled',
-        ]);
+        ])->validate();
 
         $job = @unserialize($request->input('job'));
 

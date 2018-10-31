@@ -24,8 +24,7 @@ class QueueControllerTest extends TestCase
         $payload = ['job' => serialize(new TestJob), 'data' => 'mydata'];
         $payload2 = ['job' => 'DoesNotExist'];
         $mock = Mockery::mock();
-        $mock->shouldReceive('push')
-            ->once()
+        $mock->shouldReceive('push')->once()
             ->with(Mockery::type(TestJob::class), 'mydata', 'myqueue');
         Queue::shouldReceive('connection')->once()->andReturn($mock);
         $this->withoutMiddleware()
