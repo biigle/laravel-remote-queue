@@ -60,7 +60,9 @@ class RemoteQueue extends Queue implements QueueContract
      */
     public function push($job, $data = '', $queue = null)
     {
-        return $this->pushRaw($this->createPayload($job, $data), $queue);
+        $queue = $this->getQueue($queue);
+
+        return $this->pushRaw($this->createPayload($job, $queue, $data), $queue);
     }
 
     /**
@@ -119,27 +121,31 @@ class RemoteQueue extends Queue implements QueueContract
      * Create a payload for an object-based queue handler.
      *
      * @param  mixed  $job
+     * @param  string  $queue
      * @return array
      */
-    protected function createObjectPayload($job)
+    protected function createObjectPayload($job, $queue)
     {
-        return [
+        $payload = $this->withCreatePayloadHooks($queue, []);
+
+        return array_merge($payload, [
             'job' => serialize(clone $job),
-        ];
+        ]);
     }
 
     /**
      * Create a typical, string based queue payload array.
      *
      * @param  string  $job
+     * @param  string  $queue
      * @param  mixed  $data
      * @return array
      */
-    protected function createStringPayload($job, $data)
+    protected function createStringPayload($job, $queue, $data)
     {
-        return [
+        return $this->withCreatePayloadHooks($queue, [
             'job' => $job,
             'data' => $data,
-        ];
+        ]);
     }
 }
