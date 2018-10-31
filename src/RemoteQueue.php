@@ -75,7 +75,10 @@ class RemoteQueue extends Queue implements QueueContract
     {
         $queue = $this->getQueue($queue);
 
-        return $this->client->post("{$queue}", ['body' => $payload]);
+        return $this->client->post("{$queue}", [
+            'body' => $payload,
+            'headers' => ['Content-Type' => 'application/json'],
+        ]);
     }
 
     /**
