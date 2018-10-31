@@ -70,7 +70,10 @@ class RemoteQueueTest extends TestCase
       $request = $container[0]['request'];
       $this->assertEquals('POST', $request->getMethod());
       $this->assertEquals('default', $request->getUri());
-      $this->assertContains('"commandName":"Biigle\\\RemoteQueue\\\Tests\\\TestJob"', $request->getBody()->getContents());
+      $json = json_decode($request->getBody()->getContents(), true);
+      $this->assertArrayHasKey('job', $json);
+      $job = unserialize($json['job']);
+      $this->assertInstanceOf(TestJob::class, $job);
    }
 
    public function testPushQueue()

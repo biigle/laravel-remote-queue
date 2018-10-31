@@ -1,6 +1,6 @@
 {
     "name": "biigle/laravel-remote-queue",
-    "description": "Submit jobs to another Laravel or Lumen instance.",
+    "description": "Submit jobs to and receive jobs from other Laravel or Lumen instances.",
     "type": "library",
     "authors": [
         {
@@ -10,10 +10,10 @@
     ],
     "require": {
         "guzzlehttp/guzzle": "~6.0",
-        "illuminate/queue": "^5.5",
-        "illuminate/support": "^5.5",
-        "illuminate/contracts": "^5.5",
-        "illuminate/routing": "^5.5"
+        "illuminate/queue": "5.5.*",
+        "illuminate/support": "5.5.*",
+        "illuminate/contracts": "5.5.*",
+        "illuminate/routing": "5.5.*"
     },
     "autoload": {
         "psr-4": {
@@ -36,7 +36,7 @@
         }
     },
     "require-dev": {
-        "laravel/laravel": "^5.5",
+        "laravel/laravel": "5.5.*",
         "phpunit/phpunit": "^7.4",
         "mockery/mockery": "^1.2"
     }

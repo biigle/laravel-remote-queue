@@ -13,40 +13,37 @@ class QueueControllerTest extends TestCase
         Queue::fake('myqueue');
         $response = $this->withoutMiddleware()->get('api/v1/remote-queue/myqueue/size');
         $this->assertEquals('0', $response->getContent());
-        Queue::push(new TestJob, '', 'myqueue');
-        $response = $this->withoutMiddleware()->get('api/v1/remote-queue/myqueue/size');
-        $this->assertEquals('1', $response->getContent());
+        // Can't be tested with QueueFake until Laravel 5.6.18.
+        // Queue::push(new TestJob, '', 'myqueue');
+        // $response = $this->withoutMiddleware()->get('api/v1/remote-queue/myqueue/size');
+        // $this->assertEquals('1', $response->getContent());
     }
 
     public function testStore()
     {
-        $payload = json_encode(['data' => ['commandName' => TestJob::class]]);
-        $payload2 = json_encode(['data' => ['commandName' => 'DoesNotExist']]);
+        $payload = ['job' => serialize(new TestJob), 'data' => 'mydata'];
+        $payload2 = ['job' => 'DoesNotExist'];
         $mock = Mockery::mock();
-        $mock->shouldReceive('pushRaw')->once()->with($payload, 'default');
+        $mock->shouldReceive('push')
+            ->once()
+            ->with(Mockery::type(TestJob::class), 'mydata', 'myqueue');
         Queue::shouldReceive('connection')->once()->andReturn($mock);
         $this->withoutMiddleware()
-            ->post('api/v1/remote-queue/default')
-            // Payload is required
+            ->postJson('api/v1/remote-queue/myqueue')
+            // Job is required
             ->assertStatus(422);
 
         $this->withoutMiddleware()
-            ->call('POST', 'api/v1/remote-queue/default', [], [], [], [], '.,')
-            // Payload is no valid JSON
-            ->assertStatus(422);
-
-        $this->withoutMiddleware()
-            ->call('POST', 'api/v1/remote-queue/default', [], [], [], [], $payload2)
+            ->postJson('api/v1/remote-queue/myqueue', $payload2)
             // Job class does not exist
             ->assertStatus(422);
 
         $this->withoutMiddleware()
-            ->call('POST', 'api/v1/remote-queue/default', [], [], [], [], $payload)
+            ->postJson('api/v1/remote-queue/myqueue', $payload)
             ->assertStatus(200);
     }
 }
 
 class TestJob
 {
-
 }

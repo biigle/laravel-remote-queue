@@ -3,7 +3,6 @@
 namespace Biigle\RemoteQueue\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 class QueueController extends Controller
@@ -28,24 +27,26 @@ class QueueController extends Controller
      */
     public function store(Request $request, $queue)
     {
-        $payload = $request->getContent();
+        $request->validate([
+            'job' => 'required',
+            'data' => 'filled',
+        ]);
 
-        if (!$payload) {
-            return new Response('Job payload is required', 422);
-        }
+        $job = @unserialize($request->input('job'));
 
-        $json = json_decode($payload, true);
+        if (is_object($job)) {
+            if ($job instanceof __PHP_Incomplete_Class) {
+                return response()->json(['errors' => ['job' => ['Unknown job class']]], 422);
+            }
+        } else {
+            $job = $request->input('job');
 
-        if (is_null($json)) {
-            return new Response('Job payload is no valid JSON', 422);
-        }
-
-        if (!class_exists(array_get($json, 'data.commandName'))) {
-            return new Response('Unknown job class', 422);
+            if (!class_exists($job)) {
+                return response()->json(['errors' => ['job' => ['Unknown job class']]], 422);
+            }
         }
 
         app('queue')->connection(config('remote-queue.connection'))
-            ->pushRaw($payload, $queue);
-
+            ->push($job, $request->input('data', ''), $queue);
     }
 }

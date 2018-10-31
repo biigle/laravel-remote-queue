@@ -90,7 +90,7 @@ class RemoteQueue extends Queue implements QueueContract
     public function later($delay, $job, $data = '', $queue = null)
     {
         // A delay is unsupported for now.
-        $this->pushRaw($this->createPayload($job, $data), $queue);
+        $this->push($job, $data, $queue);
     }
 
     /**
@@ -116,28 +116,30 @@ class RemoteQueue extends Queue implements QueueContract
     }
 
     /**
-     * Create a payload string from the given job and data.
+     * Create a payload for an object-based queue handler.
      *
-     * @param  string  $job
-     * @param  string   $queue
-     * @param  mixed   $data
-     * @return string
+     * @param  mixed  $job
+     * @return array
      */
-    protected function createPayloadArray($job, $queue, $data = '')
+    protected function createObjectPayload($job)
     {
-        return array_merge(parent::createPayloadArray($job, $queue, $data), [
-            'id' => $this->getRandomId(),
-            'attempts' => 0,
-        ]);
+        return [
+            'job' => serialize(clone $job),
+        ];
     }
 
     /**
-     * Get a random ID string.
+     * Create a typical, string based queue payload array.
      *
-     * @return string
+     * @param  string  $job
+     * @param  mixed  $data
+     * @return array
      */
-    protected function getRandomId()
+    protected function createStringPayload($job, $data)
     {
-        return Str::random(32);
+        return [
+            'job' => $job,
+            'data' => $data,
+        ];
     }
 }
