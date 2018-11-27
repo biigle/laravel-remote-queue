@@ -15,10 +15,17 @@ class RemoteConnector implements ConnectorInterface
      */
     public function connect(array $config)
     {
-        $client = new Client([
-            'base_uri' => $config['url'],
-            'headers' => ['Authorization' => "Bearer {$config['token']}"]
-        ]);
+        $requestOptions = [];
+        if (isset($config['request_options']) && is_array($config['request_options'])) {
+            $requestOptions = $config['request_options'];
+        }
+
+        // The URI should not be overridable by custom request options.
+        $requestOptions['base_uri'] = $config['url'];
+
+        $client = new Client(array_merge_recursive($requestOptions, [
+            'headers' => ['Authorization' => "Bearer {$config['token']}"],
+        ]));
 
         return new RemoteQueue($client, $config['queue']);
     }

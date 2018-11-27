@@ -72,6 +72,8 @@ Jobs pushed to the remote queue are transmitted via HTTP and processed on anothe
    'url' => 'http://192.168.100.100/api/v1/remote-queue/',
    // Token to use for authentication on the remote host.
    'token' => 'IoO2l7UKZfso5zQloF2XvAShEbAR5a9M8u+WBfg0HgI=',
+   // Optional additional request options for the GuzzleHttp client.
+   'request_options' => [],
 ]
 ```
 
