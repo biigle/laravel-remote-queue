@@ -1,9 +1,9 @@
 language: php
 install:
-    - rm -rf vendor
-    - composer install
+  - rm -rf vendor
+  - composer install
 script:
-    - vendor/bin/phpunit
+  - vendor/bin/phpunit
 sudo: false
 php:
   - 7.1
