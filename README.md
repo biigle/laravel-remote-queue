@@ -2,10 +2,11 @@
 
 Submit jobs to and receive jobs from other Laravel or Lumen instances.
 
+[![Build Status](https://travis-ci.org/biigle/laravel-remote-queue.svg)](https://travis-ci.org/biigle/laravel-remote-queue)
+
 ## Installation
 
 ```
-composer config repositories.laravel-remote-queue vcs https://github.com/biigle/laravel-remote-queue
 composer require biigle/laravel-remote-queue
 ```
 
