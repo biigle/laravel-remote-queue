@@ -62,7 +62,7 @@ By default, this package does not allow receiving of jobs from another applicati
 
 ### Submit jobs
 
-Jobs pushed to the remote queue are transmitted via HTTP and processed on another application. To use the remote queue, configure a queue connection in the `queue.connections` config to use the `remote`. Example:
+Jobs pushed to the remote queue are transmitted via HTTP and processed on another application. To use the remote queue, configure a queue connection in the `queue.connections` config to use the `remote` driver. Example:
 
 ```php
 [
