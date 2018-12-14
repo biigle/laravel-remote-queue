@@ -2,6 +2,7 @@
     "name": "biigle/laravel-remote-queue",
     "description": "Submit jobs to and receive jobs from other Laravel or Lumen instances.",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Martin Zurowietz",
