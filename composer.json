@@ -36,7 +36,7 @@
         }
     },
     "require-dev": {
-        "laravel/laravel": "^5.5",
+        "laravel/laravel": "^5.5 <5.7.7",
         "phpunit/phpunit": "^7.4",
         "mockery/mockery": "^1.2"
     }
