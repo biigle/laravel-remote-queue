@@ -41,8 +41,34 @@ class QueueControllerTest extends TestCase
             ->postJson('api/v1/remote-queue/myqueue', $payload)
             ->assertStatus(200);
     }
+
+    public function testStoreJobWhitelist()
+    {
+        config(['remote-queue.accept_jobs' => [TestJob::class]]);
+        $payload = ['job' => serialize(new TestJob2), 'data' => 'mydata'];
+
+        $mock = Mockery::mock();
+        $mock->shouldReceive('push')->once()
+            ->with(Mockery::type(TestJob::class), 'mydata', 'myqueue');
+        Queue::shouldReceive('connection')->once()->andReturn($mock);
+
+        $this->withoutMiddleware()
+            ->postJson('api/v1/remote-queue/myqueue', $payload)
+            // Job class is not whitelisted.
+            ->assertStatus(422);
+
+        $payload = ['job' => serialize(new TestJob), 'data' => 'mydata'];
+
+        $this->withoutMiddleware()
+            ->postJson('api/v1/remote-queue/myqueue', $payload)
+            ->assertStatus(200);
+    }
 }
 
 class TestJob
+{
+}
+
+class TestJob2
 {
 }

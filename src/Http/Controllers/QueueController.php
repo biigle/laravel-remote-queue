@@ -34,19 +34,39 @@ class QueueController extends Controller
 
         $job = @unserialize($request->input('job'));
 
-        if (is_object($job)) {
-            if ($job instanceof __PHP_Incomplete_Class) {
-                return response()->json(['errors' => ['job' => ['Unknown job class']]], 422);
-            }
-        } else {
-            $job = $request->input('job');
-
-            if (!class_exists($job)) {
-                return response()->json(['errors' => ['job' => ['Unknown job class']]], 422);
-            }
+        if ($this->isIncompleteClass($job)) {
+            return response()->json(['errors' => ['job' => ['Unknown job class']]], 422);
+        } elseif (!$this->isWhitelistedJob($job)) {
+            return response()->json(['errors' => ['job' => ['Job class not whitelisted']]], 422);
         }
 
         app('queue')->connection(config('remote-queue.connection'))
             ->push($job, $request->input('data', ''), $queue);
+    }
+
+    /**
+     * Determine if the received job class exists.
+     *
+     * @param object $job Job class name
+     *
+     * @return boolean
+     */
+    protected function isIncompleteClass($job)
+    {
+        return !is_object($job) || $job instanceof __PHP_Incomplete_Class;
+    }
+
+    /**
+     * Determine if the received job is whitelisted.
+     *
+     * @param object $job Job class name
+     *
+     * @return boolean
+     */
+    protected function isWhitelistedJob($job)
+    {
+        $whitelist = config('remote-queue.accept_jobs');
+
+        return empty($whitelist) || in_array(get_class($job), $whitelist);
     }
 }

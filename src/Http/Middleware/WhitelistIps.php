@@ -4,7 +4,7 @@ namespace Biigle\RemoteQueue\Http\Middleware;
 
 use Closure;
 
-class Authenticate
+class WhitelistIps
 {
     /**
      * Handle an incoming request.
@@ -16,8 +16,10 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        $whitelist = config('remote-queue.accept_ips');
+
         $token = $request->bearerToken();
-        if ($token && in_array($token, config('remote-queue.accept_tokens'))) {
+        if (empty($whitelist) || in_array($request->ip(), $whitelist)) {
             return $next($request);
         }
 
