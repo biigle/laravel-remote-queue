@@ -85,9 +85,21 @@ Environment: `REMOTE_QUEUE_CONNECTION`
 
 Use this queue connection to process received jobs. If `null`, the default connection is used.
 
-### remote-queue.accept-tokens
+### remote-queue.accept_tokens
 
 Default: `[]`
 Environment: `REMOTE_QUEUE_ACCEPT_TOKENS`
 
 Accept jobs only if they provide one of these tokens. Specify tokens as comma separated list if you use the environment variable. One way to generate tokens is this command: `head -c 32 /dev/urandom | base64`.
+
+### remote-queue.accept_ips
+
+Default: `[]`
+
+Accept requests only from the IP addresses of this whitelist. Leave empty to accept jobs from all IPs.
+
+### remote-queue.accept_jobs
+
+Default: `[]`
+
+Accept only jobs of this whitelist of class names. Leave empty to accept all job classes.

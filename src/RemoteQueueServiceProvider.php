@@ -4,6 +4,7 @@ namespace Biigle\RemoteQueue;
 
 use Illuminate\Support\ServiceProvider;
 use Biigle\RemoteQueue\Http\Middleware\Authenticate;
+use Biigle\RemoteQueue\Http\Middleware\WhitelistIps;
 
 class RemoteQueueServiceProvider extends ServiceProvider
 {
@@ -22,7 +23,7 @@ class RemoteQueueServiceProvider extends ServiceProvider
             $this->app['router']->group([
                 'prefix' => config('remote-queue.endpoint'),
                 'namespace' => 'Biigle\RemoteQueue\Http\Controllers',
-                'middleware' => Authenticate::class,
+                'middleware' => [Authenticate::class, WhitelistIps::class],
             ], function ($router) {
                 $router->post('{queue}', 'QueueController@store');
                 $router->get('{queue}/size', 'QueueController@show');

@@ -8,7 +8,7 @@ class AuthenticateTest extends TestCase
 {
     public function testHandle()
     {
-        config(['remote-queue.accept-tokens' => ['mytoken']]);
+        config(['remote-queue.accept_tokens' => ['mytoken']]);
 
         $this->get('api/v1/remote-queue/default/size')->assertStatus(401);
 
