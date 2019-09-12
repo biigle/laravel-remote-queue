@@ -2,7 +2,7 @@
 
 Submit jobs to and receive jobs from other Laravel or Lumen instances.
 
-[![Build Status](https://api.travis-ci.org/biigle/laravel-remote-queue.svg?branch=master)](https://travis-ci.org/biigle/laravel-remote-queue)
+[![Build Status](https://api.travis-ci.org/biigle/laravel-remote-queue.svg?branch=master)](https://travis-ci.org/biigle/laravel-remote-queue?branch=laravel-5.7.6)
 
 ## Installation
 
